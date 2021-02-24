@@ -62,5 +62,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>Cette app aimerait vous permettre de prendre des photos à ajouter à vos todos</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Cette app aimerait vous permettre d&apos;ajouter des photos depuis vos albums à vos todos</string>
 </dict>
 </plist>
