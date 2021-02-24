@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		08FCEFF225E64726003CC332 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 08FCEFF025E64726003CC332 /* DataModel.xcdatamodeld */; };
 		301F4F9E25E642C600DEC002 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 301F4F9D25E642C600DEC002 /* AppDelegate.swift */; };
 		301F4FA025E642C600DEC002 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 301F4F9F25E642C600DEC002 /* SceneDelegate.swift */; };
 		301F4FA225E642C600DEC002 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 301F4FA125E642C600DEC002 /* ViewController.swift */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		08FCEFF125E64726003CC332 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		301F4F9A25E642C600DEC002 /* Todo_CoreData.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Todo_CoreData.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		301F4F9D25E642C600DEC002 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		301F4F9F25E642C600DEC002 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -59,6 +61,7 @@
 			isa = PBXGroup;
 			children = (
 				301F4F9D25E642C600DEC002 /* AppDelegate.swift */,
+				08FCEFF025E64726003CC332 /* DataModel.xcdatamodeld */,
 				301F4F9F25E642C600DEC002 /* SceneDelegate.swift */,
 				301F4FA125E642C600DEC002 /* ViewController.swift */,
 				301F4FA325E642C600DEC002 /* Main.storyboard */,
@@ -141,6 +144,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				301F4FA225E642C600DEC002 /* ViewController.swift in Sources */,
+				08FCEFF225E64726003CC332 /* DataModel.xcdatamodeld in Sources */,
 				301F4F9E25E642C600DEC002 /* AppDelegate.swift in Sources */,
 				301F4FA825E642C600DEC002 /* Todo_CoreData.xcdatamodeld in Sources */,
 				301F4FA025E642C600DEC002 /* SceneDelegate.swift in Sources */,
@@ -345,6 +349,16 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
+		08FCEFF025E64726003CC332 /* DataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				08FCEFF125E64726003CC332 /* DataModel.xcdatamodel */,
+			);
+			currentVersion = 08FCEFF125E64726003CC332 /* DataModel.xcdatamodel */;
+			path = DataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
 		301F4FA625E642C600DEC002 /* Todo_CoreData.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
