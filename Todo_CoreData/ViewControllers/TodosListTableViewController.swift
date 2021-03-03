@@ -7,8 +7,6 @@
 
 import UIKit
 
-
-
 class TodosListTableViewController: UITableViewController {
     
     var listTodos : [Tache] = []
@@ -16,7 +14,7 @@ class TodosListTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        //listTodos = DataManager.shared
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -51,11 +49,9 @@ extension TodosListTableViewController : AddTodoDelegate {
         }
     }
     
-    func addTodoViewControllerDone(_ controller: AddTodoTableViewController, _ item: String) {
+    func addTodoViewControllerDone(_ controller: AddTodoTableViewController) {
         dismiss(animated: true) {
             print("user added todo")
         }
     }
-    
-    
 }

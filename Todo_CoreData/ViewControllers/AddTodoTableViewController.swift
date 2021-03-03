@@ -9,7 +9,7 @@ import UIKit
 
 protocol AddTodoDelegate : class{
     func addTodoViewControllerDidCancel(_ controller: AddTodoTableViewController)
-    func addTodoViewControllerDone(_ controller: AddTodoTableViewController, _ item: String)
+    func addTodoViewControllerDone(_ controller: AddTodoTableViewController)
 }
 
 class AddTodoTableViewController: UITableViewController {
@@ -49,7 +49,8 @@ class AddTodoTableViewController: UITableViewController {
     }
     
     @IBAction func saveButtonClicked(_ sender: Any) {
-        delegate?.addTodoViewControllerDone(self, "yo")
+        DataManager.shared.addTask(titre: titleTextField.text ?? "No title", description: descrTextField.text ?? "No descr")
+        delegate?.addTodoViewControllerDone(self)
     }
     
     
