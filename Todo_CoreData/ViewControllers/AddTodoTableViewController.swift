@@ -13,9 +13,14 @@ protocol AddTodoDelegate : class{
 }
 
 class AddTodoTableViewController: UITableViewController {
-
+    @IBOutlet weak var saveBarButtonItem: UIBarButtonItem!
+    
+    @IBOutlet weak var todoImageView: UIImageView!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -24,6 +29,12 @@ class AddTodoTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "selectDefaultImageSegue" {
+            let dest = segue.destination as! IconPickerTableViewController
+            dest.delegate = self
+        }
+    }
     
 }
 
@@ -31,7 +42,14 @@ extension AddTodoTableViewController : UITextFieldDelegate{
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let oldText = textField.text!
         let newString = oldText.replacingCharacters(in: Range(range, in: oldText)!, with: string)
-        //doneButton.isEnabled = newString.count > 0
+        saveBarButtonItem.isEnabled = newString.count > 0
         return true
+    }
+}
+
+extension AddTodoTableViewController : SelectIconDelegate {
+    func userSelectIcon(_ controller: IconPickerTableViewController, _ iconSelected: EnumTodoIcons) {
+        todoImageView.image = iconSelected.image
+        controller.dismiss(animated: true)
     }
 }
