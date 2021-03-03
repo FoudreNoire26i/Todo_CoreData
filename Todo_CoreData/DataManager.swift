@@ -20,36 +20,23 @@ protocol DataManagerProtocol {
 
 class DataManager{
     
+    static let shared = DataManager()
+    
     var persistantContainer: NSPersistentContainer {
         (UIApplication.shared.delegate as! AppDelegate).persistentContainer
     }
     
+    private init(){}
     
-    func addTask(titre: String ,description: String){
+    func getData(){
         let managedContext = persistantContainer.viewContext
-        let item = Tache(context: managedContext)
-        item.titre = titre
-        item.desc = description
-        item.dateCreation = Date()
-        
+        let fetchRequest = NSFetchRequest<Tache>(entityName: "Tache")
+        do{
+            let result: [Tache] = try managedContext.fetch(fetchRequest)
+        }catch{
+            print(error.localizedDescription)
+        }
     }
-    
-    func addCategory(titre: String){
-        let managedContext = persistantContainer.viewContext
-        let item = Categorie(context: managedContext)
-        item.titre = titre
-    }
-    
-    func deleteTask(objet: Tache){
-        let managedContext = persistantContainer.viewContext
-        managedContext.delete(objet)
-    }
-    
-    func deleteCategory(objet: Categorie){
-        let managedContext = persistantContainer.viewContext
-        managedContext.delete(objet)
-    }
-    
     
     func saveData(){
         let context = persistantContainer.viewContext
@@ -64,3 +51,41 @@ class DataManager{
     }
     
 }
+
+extension DataManager:DataManagerProtocol{
+    
+    func addTask(titre: String ,description: String){
+        let managedContext = persistantContainer.viewContext
+        let item = Tache(context: managedContext)
+        item.titre = titre
+        item.desc = description
+        item.dateCreation = Date()
+        saveData()
+        
+    }
+    
+    func addCategory(titre: String){
+        let managedContext = persistantContainer.viewContext
+        let item = Categorie(context: managedContext)
+        item.titre = titre
+        item.dateCreation = Date()
+        saveData()
+
+    }
+    
+    func deleteTask(objet: Tache){
+        let managedContext = persistantContainer.viewContext
+        managedContext.delete(objet)
+        saveData()
+
+    }
+    
+    func deleteCategory(objet: Categorie){
+        let managedContext = persistantContainer.viewContext
+        managedContext.delete(objet)
+        saveData()
+
+    }
+    
+}
+
