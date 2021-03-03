@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="60K-qH-JvB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="sJe-Ni-rcq">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
@@ -10,7 +10,7 @@
         <!--Mes Todos-->
         <scene sceneID="tda-iM-0JD">
             <objects>
-                <tableViewController id="KQn-hi-3c2" sceneMemberID="viewController">
+                <tableViewController id="KQn-hi-3c2" customClass="TodosListTableViewController" customModule="Todo_CoreData" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="zHS-1O-FLf">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -53,7 +53,7 @@
                     <navigationItem key="navigationItem" title="Mes Todos" id="6SE-h1-60m">
                         <barButtonItem key="rightBarButtonItem" style="plain" systemItem="add" id="95f-ws-sLW">
                             <connections>
-                                <segue destination="60K-qH-JvB" kind="presentation" id="wb7-7X-vyy"/>
+                                <segue destination="60K-qH-JvB" kind="presentation" identifier="addTodo" id="wb7-7X-vyy"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -66,7 +66,7 @@
         <scene sceneID="O7C-8g-ReA">
             <objects>
                 <tableViewController id="0n2-Th-rcy" customClass="AddTodoTableViewController" customModule="Todo_CoreData" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="0f0-oZ-pnG">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="0f0-oZ-pnG">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -138,8 +138,11 @@
                                                     <nil key="highlightedColor"/>
                                                     <size key="shadowOffset" width="0.0" height="0.0"/>
                                                 </label>
-                                                <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="ajy-HL-BlY">
+                                                <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="5" translatesAutoresizingMaskIntoConstraints="NO" id="ajy-HL-BlY">
                                                     <rect key="frame" x="300" y="14" width="94" height="19"/>
+                                                    <connections>
+                                                        <action selector="categoryStepperValueChanged:" destination="0n2-Th-rcy" eventType="valueChanged" id="Hac-bb-zid"/>
+                                                    </connections>
                                                 </stepper>
                                             </subviews>
                                             <constraints>
@@ -245,7 +248,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="Gus-eh-IQC" kind="presentation" identifier="selectDefaultImageSegue" trigger="accessoryAction" id="SSl-hu-rah"/>
+                                            <segue destination="Gus-eh-IQC" kind="presentation" identifier="selectDefaultImageSegue" id="KQ0-A6-qTs"/>
                                         </connections>
                                     </tableViewCell>
                                 </cells>
@@ -310,11 +313,24 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Ajouter votre todo" id="f2u-mr-2Dk">
                         <barButtonItem key="backBarButtonItem" title="Annuler" id="7r1-dc-UY3"/>
-                        <barButtonItem key="leftBarButtonItem" style="plain" systemItem="cancel" id="48q-94-Cfg"/>
-                        <barButtonItem key="rightBarButtonItem" style="plain" systemItem="save" id="WD7-AE-Npa"/>
+                        <barButtonItem key="leftBarButtonItem" style="plain" systemItem="cancel" id="48q-94-Cfg">
+                            <connections>
+                                <action selector="cancelButtonClicked:" destination="0n2-Th-rcy" id="N75-RH-dgB"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" style="plain" systemItem="save" id="WD7-AE-Npa">
+                            <connections>
+                                <action selector="saveButtonClicked:" destination="0n2-Th-rcy" id="xGe-ez-vKr"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="categorieListLabel" destination="PmX-Rv-o6x" id="QQx-UP-0KH"/>
+                        <outlet property="categorieStepper" destination="ajy-HL-BlY" id="XVO-zt-bD8"/>
+                        <outlet property="descrTextField" destination="Czm-n2-Bdh" id="cqN-gL-uXT"/>
+                        <outlet property="newCategorieTextField" destination="bcY-wV-2MJ" id="uY0-rE-wa6"/>
                         <outlet property="saveBarButtonItem" destination="WD7-AE-Npa" id="ei7-Vo-t06"/>
+                        <outlet property="titleTextField" destination="IxP-qg-cEz" id="7KQ-27-MUl"/>
                         <outlet property="todoImageView" destination="yhr-9V-8If" id="KxC-Ju-AZ5"/>
                     </connections>
                 </tableViewController>

@@ -17,6 +17,14 @@ class AddTodoTableViewController: UITableViewController {
     
     @IBOutlet weak var todoImageView: UIImageView!
     
+    var delegate : TodosListTableViewController?
+    
+    @IBOutlet weak var categorieListLabel: UILabel!
+    @IBOutlet weak var categorieStepper: UIStepper!
+    @IBOutlet weak var newCategorieTextField: UITextField!
+    var listCategory : [String] = []
+    @IBOutlet weak var titleTextField: UITextField!
+    @IBOutlet weak var descrTextField: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,6 +44,38 @@ class AddTodoTableViewController: UITableViewController {
         }
     }
     
+    @IBAction func cancelButtonClicked(_ sender: Any) {
+        delegate?.addTodoViewControllerDidCancel(self)
+    }
+    
+    @IBAction func saveButtonClicked(_ sender: Any) {
+        delegate?.addTodoViewControllerDone(self, "yo")
+    }
+    
+    
+    @IBAction func categoryStepperValueChanged(_ sender: UIStepper) {
+        if (listCategory.count < Int(sender.value)){
+            if  (newCategorieTextField.text != nil && newCategorieTextField.text != "" && !listCategory.contains(newCategorieTextField.text!)){
+                listCategory.append(newCategorieTextField.text!)
+            }
+            //add cat
+        } else if (listCategory.count > Int(sender.value)){
+            listCategory.popLast()
+            //remove cat
+        }
+        updateCategoryLabel()
+    }
+    
+    func updateCategoryLabel(){
+        if (listCategory.isEmpty){
+            categorieListLabel.text = "Aucune catégorie"
+        } else {
+            categorieListLabel.text = ""
+            listCategory.forEach { (cat) in
+                categorieListLabel.text! += "\(cat), "
+            }
+        }
+    }
 }
 
 extension AddTodoTableViewController : UITextFieldDelegate{
