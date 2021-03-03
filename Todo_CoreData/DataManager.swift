@@ -38,6 +38,19 @@ class DataManager{
         }
     }
     
+    func getTache() -> [Tache] {
+        let managedContext = persistantContainer.viewContext
+        let fetchRequest = NSFetchRequest<Tache>(entityName: "Tache")
+        do{
+            let result: [Tache] = try managedContext.fetch(fetchRequest)
+            return result
+        }catch{
+            print(error.localizedDescription)
+        }
+        return []
+        
+    }
+    
     func saveData(){
         let context = persistantContainer.viewContext
         if context.hasChanges {
