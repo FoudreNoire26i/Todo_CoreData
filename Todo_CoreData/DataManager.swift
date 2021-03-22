@@ -16,6 +16,8 @@ protocol DataManagerProtocol {
     func deleteTask(objet: Tache)
     func deleteCategory(objet: Categorie)
     
+    func updateTask(objet: Tache, titre: String,description: String)
+    
 }
 
 class DataManager{
@@ -66,6 +68,27 @@ class DataManager{
 }
 
 extension DataManager:DataManagerProtocol{
+    func updateTask(objet: Tache, titre: String, description: String) {
+        let managedContext = persistantContainer.viewContext
+        let fetchRequest: NSFetchRequest<Tache> = Tache.fetchRequest()
+        
+        let predicate = NSPredicate(format: "titre : %@",objet.titre as! CVarArg)
+        fetchRequest.predicate = predicate
+        
+        do{
+            
+            let result: [Tache] = try managedContext.fetch(fetchRequest)
+            
+            for object in result {
+                deleteTask(objet: object)
+            }
+            
+            addTask(titre: titre, description: description)
+            
+        }catch {
+            print(error.localizedDescription)
+        }
+    }
     
     func addTask(titre: String ,description: String){
         let managedContext = persistantContainer.viewContext
