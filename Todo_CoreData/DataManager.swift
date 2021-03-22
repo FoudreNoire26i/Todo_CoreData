@@ -11,6 +11,7 @@ import CoreData
 protocol DataManagerProtocol {
     
     func addTask(titre: String,description: String)
+    func addTaskUpdated(titre: String,description: String, myCreationDate: Date)
     func addCategory(titre: String)
     
     func deleteTask(objet: Tache)
@@ -68,6 +69,18 @@ class DataManager{
 }
 
 extension DataManager:DataManagerProtocol{
+    
+    
+    func addTaskUpdated(titre: String, description: String, myCreationDate: Date) {
+        let managedContext = persistantContainer.viewContext
+        let item = Tache(context: managedContext)
+        item.titre = titre
+        item.desc = description
+        item.dateCreation = myCreationDate
+        saveData()
+    }
+    
+    
     func updateTask(objet: Tache, titre: String, description: String) {
         let managedContext = persistantContainer.viewContext
         let fetchRequest: NSFetchRequest<Tache> = Tache.fetchRequest()
@@ -83,7 +96,7 @@ extension DataManager:DataManagerProtocol{
                 deleteTask(objet: object)
             }
             
-            addTask(titre: titre, description: description)
+            addTaskUpdated(titre: titre, description: description, myCreationDate: objet.dateCreation ?? Date())
             
         }catch {
             print(error.localizedDescription)
