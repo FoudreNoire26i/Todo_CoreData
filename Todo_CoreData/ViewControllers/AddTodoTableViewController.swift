@@ -22,13 +22,26 @@ class AddTodoTableViewController: UITableViewController {
     @IBOutlet weak var categorieListLabel: UILabel!
     @IBOutlet weak var categorieStepper: UIStepper!
     @IBOutlet weak var newCategorieTextField: UITextField!
-    var listCategory : [String] = []
+    var listCategory : [Categorie] = []
     @IBOutlet weak var titleTextField: UITextField!
     @IBOutlet weak var descrTextField: UITextField!
+    @IBOutlet weak var creationDateTextView: UILabel!
+    @IBOutlet weak var lastUpdateDateTextView: UILabel!
+    
+    var itemToEdit : Tache? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        if (itemToEdit != nil){
+            titleTextField.text = itemToEdit!.titre
+            descrTextField.text = itemToEdit!.description
+            itemToEdit!.categorie?.forEach({ (cat : Any) in
+                listCategory.append((cat as! Categorie))
+            })
+            updateCategoryLabel()
+            //todoImageView.image = UIImage(data: itemToEdit!.image!.data!)
+        }
+         updateDateLabels()
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -37,11 +50,26 @@ class AddTodoTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
     
+    func updateDateLabels() {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .short
+        dateFormatter.locale = Locale(identifier: "fr_FR")
+        
+        if (itemToEdit != nil){
+            creationDateTextView.text = dateFormatter.string(from: itemToEdit!.dateCreation!)
+            lastUpdateDateTextView.text = dateFormatter.string(from: itemToEdit!.dateMaj!)
+        } else {
+            creationDateTextView.text = dateFormatter.string(from: Date())
+            lastUpdateDateTextView.text = dateFormatter.string(from: Date())
+        }
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "selectDefaultImageSegue" {
             let dest = segue.destination as! IconPickerTableViewController
             dest.delegate = self
-        }
+        } 
     }
     
     @IBAction func cancelButtonClicked(_ sender: Any) {
@@ -49,19 +77,35 @@ class AddTodoTableViewController: UITableViewController {
     }
     
     @IBAction func saveButtonClicked(_ sender: Any) {
-        DataManager.shared.addTask(titre: titleTextField.text ?? "No title", description: descrTextField.text ?? "No descr")
+        if (itemToEdit != nil){
+                //update
+        } else {
+            
+            let newTodo = DataManager.shared.addTask(
+                titre: titleTextField.text ?? "No title",
+                description: descrTextField.text ?? "No descr"
+            )
+            listCategory.forEach { (cat : Categorie) in
+                newTodo.addToCategorie(cat)
+            }
+        }
         delegate?.addTodoViewControllerDone(self)
     }
     
     
     @IBAction func categoryStepperValueChanged(_ sender: UIStepper) {
         if (listCategory.count < Int(sender.value)){
-            if  (newCategorieTextField.text != nil && newCategorieTextField.text != "" && !listCategory.contains(newCategorieTextField.text!)){
-                listCategory.append(newCategorieTextField.text!)
+            let newText = newCategorieTextField.text
+            if  (newText != nil && newText != "" && !listCategory.contains(where: { (cat : Categorie) -> Bool in
+                return cat.titre == newText
+            })){
+                let newCat = DataManager.shared.addCategory(titre: newText!)
+                listCategory.append(newCat)
             }
             //add cat
         } else if (listCategory.count > Int(sender.value)){
-            listCategory.popLast()
+            let last = listCategory.popLast()
+            DataManager.shared.deleteCategory(objet: last!)
             //remove cat
         }
         updateCategoryLabel()
@@ -73,7 +117,7 @@ class AddTodoTableViewController: UITableViewController {
         } else {
             categorieListLabel.text = ""
             listCategory.forEach { (cat) in
-                categorieListLabel.text! += "\(cat), "
+                categorieListLabel.text! += "\(cat.titre!), "
             }
         }
     }
@@ -91,6 +135,10 @@ extension AddTodoTableViewController : UITextFieldDelegate{
 extension AddTodoTableViewController : SelectIconDelegate {
     func userSelectIcon(_ controller: IconPickerTableViewController, _ iconSelected: EnumTodoIcons) {
         todoImageView.image = iconSelected.image
+        if (itemToEdit != nil){
+            //todo : possible erreur
+            //itemToEdit!.image!.data = iconSelected.image.pngData()
+        }
         controller.dismiss(animated: true)
     }
 }

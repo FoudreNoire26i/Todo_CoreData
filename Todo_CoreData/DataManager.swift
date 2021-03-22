@@ -10,8 +10,8 @@ import CoreData
 
 protocol DataManagerProtocol {
     
-    func addTask(titre: String,description: String)
-    func addCategory(titre: String)
+    func addTask(titre: String,description: String) -> Tache
+    func addCategory(titre: String) -> Categorie
     
     func deleteTask(objet: Tache)
     func deleteCategory(objet: Categorie)
@@ -46,8 +46,8 @@ class DataManager{
             return result
         }catch{
             print(error.localizedDescription)
+            return []
         }
-        return []
         
     }
     
@@ -67,23 +67,24 @@ class DataManager{
 
 extension DataManager:DataManagerProtocol{
     
-    func addTask(titre: String ,description: String){
+    func addTask(titre: String , description: String) -> Tache{
         let managedContext = persistantContainer.viewContext
         let item = Tache(context: managedContext)
         item.titre = titre
         item.desc = description
         item.dateCreation = Date()
+        item.dateMaj = Date()
         saveData()
-        
+        return item
     }
     
-    func addCategory(titre: String){
+    func addCategory(titre: String) -> Categorie{
         let managedContext = persistantContainer.viewContext
         let item = Categorie(context: managedContext)
         item.titre = titre
         item.dateCreation = Date()
         saveData()
-
+        return item
     }
     
     func deleteTask(objet: Tache){

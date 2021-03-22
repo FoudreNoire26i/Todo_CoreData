@@ -11,10 +11,18 @@ class TodosListTableViewController: UITableViewController {
     
     var listTodos : [Tache] = []
     
+    
+    var documentDirectory: URL {
+        get {
+            return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        }
+    }
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        //listTodos = DataManager.shared
+        listTodos = DataManager.shared.getTache()
+        print(documentDirectory)
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -27,19 +35,30 @@ class TodosListTableViewController: UITableViewController {
             let nav = segue.destination as! UINavigationController
             let dest = nav.topViewController as! AddTodoTableViewController
             dest.delegate = self
+        } else if segue.identifier == "editTodoItemSegue" {
+            let dest = segue.destination as! AddTodoTableViewController
+            dest.itemToEdit = (sender as! TodoTableViewCell).todo
+            dest.delegate = self
         }
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return listTodos.count
+        return listTodos.count 
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.reloadRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "id")
-        cell.largeContentTitle = listTodos[indexPath.row].titre
+        let cell =
+            tableView.dequeueReusableCell(withIdentifier:"TodoItemCell", for : indexPath) as! TodoTableViewCell
+        let item = listTodos[indexPath.row]
+        cell.todo = item
+        cell.setUI(title: item.titre!, subtitle: "cat", image: UIImage(named: "Appointments"))
         return cell
     }
-
 }
 
 extension TodosListTableViewController : AddTodoDelegate {
@@ -50,6 +69,8 @@ extension TodosListTableViewController : AddTodoDelegate {
     }
     
     func addTodoViewControllerDone(_ controller: AddTodoTableViewController) {
+        listTodos = DataManager.shared.getTache()
+        tableView.reloadData()
         dismiss(animated: true) {
             print("user added todo")
         }
