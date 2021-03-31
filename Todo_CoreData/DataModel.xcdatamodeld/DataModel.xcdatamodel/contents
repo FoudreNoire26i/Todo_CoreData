@@ -18,12 +18,12 @@
         <attribute name="dateMaj" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="desc" optional="YES" attributeType="String"/>
         <attribute name="titre" optional="YES" attributeType="String"/>
-        <relationship name="categorie" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Categorie" inverseName="taches" inverseEntity="Categorie"/>
+        <relationship name="categorie" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Categorie" inverseName="taches" inverseEntity="Categorie"/>
         <relationship name="image" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Image"/>
     </entity>
     <elements>
         <element name="Categorie" positionX="-310.078125" positionY="-56.94140625" width="128" height="89"/>
         <element name="Image" positionX="-308.8125" positionY="172.23046875" width="128" height="103"/>
-        <element name="Tache" positionX="-477.4453125" positionY="-38.76953125" width="128" height="148"/>
+        <element name="Tache" positionX="-477.4453125" positionY="-38.76953125" width="128" height="134"/>
     </elements>
 </model>
