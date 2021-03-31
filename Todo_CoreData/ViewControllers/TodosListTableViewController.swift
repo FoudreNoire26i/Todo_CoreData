@@ -48,16 +48,20 @@ class TodosListTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.reloadRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
+        let itemToCheck = listTodos[indexPath.row]
+        DataManager.shared.updateTask(objet: itemToCheck, titre: itemToCheck.titre!, description: itemToCheck.desc!, listCategory: nil, dateMaj: itemToCheck.dateMaj, checked: !itemToCheck.checked)
+        listTodos = DataManager.shared.getTache()
+        tableView.reloadRows(at: [indexPath], with: .automatic)
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let item = listTodos[indexPath.row]
         let cell =
             tableView.dequeueReusableCell(withIdentifier:"TodoItemCell", for : indexPath) as! TodoTableViewCell
-        let item = listTodos[indexPath.row]
         cell.todo = item
-        cell.setUI(title: item.titre!, subtitle: item.desc!, image: UIImage(named: "Appointments"))
+        cell.setUI(title: item.titre ?? "PB with title", subtitle: item.desc ?? "PB with desc", image: UIImage(named: "Appointments"))
+        cell.setChecked(checked: item.checked)
         return cell
     }
     

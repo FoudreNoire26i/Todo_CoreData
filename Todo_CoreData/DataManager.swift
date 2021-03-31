@@ -12,12 +12,12 @@ protocol DataManagerProtocol {
     
     func addTask(titre: String,description: String, listCategory : [Categorie]) -> Tache
     func addCategory(titre: String) -> Categorie
-    func addTaskUpdated(titre: String, description: String, myCreationDate: Date, listCategory : [Categorie])
+    func addTaskUpdated(titre: String, description: String, myCreationDate: Date, dateMaj: Date, listCategory : [Categorie]?, checked : Bool)
     
     func deleteTask(objet: Tache)
     func deleteCategory(objet: Categorie)
     
-    func updateTask(objet: Tache, titre: String,description: String, listCategory : [Categorie])
+    func updateTask(objet: Tache, titre: String,description: String, listCategory : [Categorie]?, dateMaj: Date?, checked : Bool)
     
 }
 
@@ -33,6 +33,7 @@ class DataManager{
     func getData(){
         let managedContext = persistantContainer.viewContext
         let fetchRequest = NSFetchRequest<Tache>(entityName: "Tache")
+        
         do{
             let result: [Tache] = try managedContext.fetch(fetchRequest)
         }catch{
@@ -43,6 +44,8 @@ class DataManager{
     func getTache() -> [Tache] {
         let managedContext = persistantContainer.viewContext
         let fetchRequest = NSFetchRequest<Tache>(entityName: "Tache")
+        let sort = NSSortDescriptor(key: "dateMaj", ascending: false)
+        fetchRequest.sortDescriptors = [sort]
         do{
             let result: [Tache] = try managedContext.fetch(fetchRequest)
             return result
@@ -70,21 +73,23 @@ class DataManager{
 extension DataManager:DataManagerProtocol{
     
     //todo : virer et remplacer addtask par cette fct
-    func addTaskUpdated(titre: String, description: String, myCreationDate: Date = Date(), listCategory : [Categorie]) {
+    func addTaskUpdated(titre: String, description: String, myCreationDate: Date, dateMaj: Date,  listCategory : [Categorie]?, checked :Bool) {
         let managedContext = persistantContainer.viewContext
         let item = Tache(context: managedContext)
         item.titre = titre
         item.desc = description
         item.dateCreation = myCreationDate
-        item.dateMaj = Date()
-        listCategory.forEach { (cat : Categorie) in
+        item.dateMaj = dateMaj
+        item.checked = checked
+        listCategory?.forEach { (cat : Categorie) in
             item.addToCategorie(cat)
         }
+        
         saveData()
     }
     
     
-    func updateTask(objet: Tache, titre: String, description: String, listCategory : [Categorie]) {
+    func updateTask(objet: Tache, titre: String, description: String, listCategory : [Categorie]?, dateMaj: Date?,  checked : Bool) {
         let managedContext = persistantContainer.viewContext
         let fetchRequest: NSFetchRequest<Tache> = Tache.fetchRequest()
         
@@ -96,7 +101,7 @@ extension DataManager:DataManagerProtocol{
             let result: [Tache] = try managedContext.fetch(fetchRequest)
             
             
-            addTaskUpdated(titre: titre, description: description, myCreationDate: objet.dateCreation!, listCategory: listCategory)
+            addTaskUpdated(titre: titre, description: description, myCreationDate: objet.dateCreation!, dateMaj: dateMaj ?? Date(), listCategory: listCategory, checked: checked)
             
             for object in result {
                 deleteTask(objet: object)
@@ -113,6 +118,7 @@ extension DataManager:DataManagerProtocol{
         let item = Tache(context: managedContext)
         item.titre = titre
         item.desc = description
+        item.checked = false
         
         item.dateCreation = Date()
         item.dateMaj = Date()

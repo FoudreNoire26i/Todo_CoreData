@@ -27,6 +27,10 @@ class TodoTableViewCell: UITableViewCell {
             imageView?.image = image
         }
     }
+    func setChecked(checked : Bool){
+        titleLabel.textColor = checked ? .systemGreen : .black
+        //titleLabel.backgroundColor = checked ? .systemGreen : .none
+    }
     
     
 

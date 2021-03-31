@@ -80,9 +80,11 @@ class AddTodoTableViewController: UITableViewController {
         if (itemToEdit != nil){
             DataManager.shared.updateTask(
                 objet: itemToEdit!,
-                titre: titleTextField.text ?? "No title",
+                titre: titleTextField.text ?? itemToEdit!.titre!,
                 description: descrTextField.text ?? "No descr",
-                listCategory: listCategory
+                listCategory: listCategory,
+                dateMaj: Date(),
+                checked: itemToEdit!.checked
             )
         } else {
             let newTodo = DataManager.shared.addTask(
@@ -141,6 +143,7 @@ extension AddTodoTableViewController : SelectIconDelegate {
         todoImageView.image = iconSelected.image
         if (itemToEdit != nil){
             //todo : possible erreur
+            
             //itemToEdit!.image!.data = iconSelected.image.pngData()
         }
         controller.dismiss(animated: true)
