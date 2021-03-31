@@ -10,14 +10,17 @@ import CoreData
 
 protocol DataManagerProtocol {
     
-    func addTask(titre: String,description: String, listCategory : [Categorie]) -> Tache
+    func addTask(titre: String,description: String, listCategory : [Categorie],data: Data) -> Tache
     func addCategory(titre: String) -> Categorie
-    func addTaskUpdated(titre: String, description: String, myCreationDate: Date, dateMaj: Date, listCategory : [Categorie]?, checked : Bool)
+    func addTaskUpdated(titre: String, description: String, myCreationDate: Date, dateMaj: Date, listCategory : [Categorie]?, checked : Bool, data: Data)
+    
+    func updateTask(objet: Tache, titre: String,description: String, listCategory : [Categorie]?, dateMaj: Date?, checked : Bool, data: Data)
+    
+    func addImage(data: Data) -> Image
     
     func deleteTask(objet: Tache)
     func deleteCategory(objet: Categorie)
     
-    func updateTask(objet: Tache, titre: String,description: String, listCategory : [Categorie]?, dateMaj: Date?, checked : Bool)
     
 }
 
@@ -72,8 +75,18 @@ class DataManager{
 
 extension DataManager:DataManagerProtocol{
     
+    func addImage(data: Data) -> Image {
+        let managedContext = persistantContainer.viewContext
+        let item = Image(context: managedContext)
+        item.data = data
+        
+        saveData()
+        return item
+    }
+    
+    
     //todo : virer et remplacer addtask par cette fct
-    func addTaskUpdated(titre: String, description: String, myCreationDate: Date, dateMaj: Date,  listCategory : [Categorie]?, checked :Bool) {
+    func addTaskUpdated(titre: String, description: String, myCreationDate: Date, dateMaj: Date,  listCategory : [Categorie]?, checked :Bool, data: Data) {
         let managedContext = persistantContainer.viewContext
         let item = Tache(context: managedContext)
         item.titre = titre
@@ -85,11 +98,14 @@ extension DataManager:DataManagerProtocol{
             item.addToCategorie(cat)
         }
         
+        let myImage = addImage(data: data)
+        item.image = myImage
+        
         saveData()
     }
     
     
-    func updateTask(objet: Tache, titre: String, description: String, listCategory : [Categorie]?, dateMaj: Date?,  checked : Bool) {
+    func updateTask(objet: Tache, titre: String, description: String, listCategory : [Categorie]?, dateMaj: Date?,  checked : Bool, data: Data) {
         let managedContext = persistantContainer.viewContext
         let fetchRequest: NSFetchRequest<Tache> = Tache.fetchRequest()
         
@@ -100,8 +116,7 @@ extension DataManager:DataManagerProtocol{
             
             let result: [Tache] = try managedContext.fetch(fetchRequest)
             
-            
-            addTaskUpdated(titre: titre, description: description, myCreationDate: objet.dateCreation!, dateMaj: dateMaj ?? Date(), listCategory: listCategory, checked: checked)
+            addTaskUpdated(titre: titre, description: description, myCreationDate: objet.dateCreation!, dateMaj: dateMaj ?? Date(), listCategory: listCategory, checked: checked, data: data)
             
             for object in result {
                 deleteTask(objet: object)
@@ -113,7 +128,7 @@ extension DataManager:DataManagerProtocol{
         }
     }
     
-    func addTask(titre: String , description: String, listCategory : [Categorie]) -> Tache{
+    func addTask(titre: String , description: String, listCategory : [Categorie], data: Data) -> Tache{
         let managedContext = persistantContainer.viewContext
         let item = Tache(context: managedContext)
         item.titre = titre
@@ -126,6 +141,9 @@ extension DataManager:DataManagerProtocol{
         listCategory.forEach { (cat : Categorie) in
             item.addToCategorie(cat)
         }
+        
+        let myImage = addImage(data: data)
+        item.image = myImage
         
         saveData()
         return item

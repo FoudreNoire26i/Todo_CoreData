@@ -39,7 +39,12 @@ class AddTodoTableViewController: UITableViewController {
                 listCategory.append((cat as! Categorie))
             })
             updateCategoryLabel()
-            //todoImageView.image = UIImage(data: itemToEdit!.image!.data!)
+            if (itemToEdit!.image?.data != nil){
+                todoImageView.image = UIImage(data: itemToEdit!.image!.data!)
+            } else {
+                todoImageView.image = EnumTodoIcons.NoIcon.image
+            }
+            
         }
          updateDateLabels()
 
@@ -84,13 +89,15 @@ class AddTodoTableViewController: UITableViewController {
                 description: descrTextField.text ?? "No descr",
                 listCategory: listCategory,
                 dateMaj: Date(),
-                checked: itemToEdit!.checked
+                checked: itemToEdit!.checked,
+                data: todoImageView.image!.pngData()! ?? UIImage(named: "No icon")!.pngData()!
             )
         } else {
             let newTodo = DataManager.shared.addTask(
                 titre: titleTextField.text ?? "No title",
                 description: descrTextField.text ?? "No descr",
-                listCategory: listCategory
+                listCategory: listCategory,
+                data: todoImageView.image!.pngData()! ?? UIImage(named: "No icon")!.pngData()!
             )
         }
         delegate?.addTodoViewControllerDone(self)
@@ -141,11 +148,11 @@ extension AddTodoTableViewController : UITextFieldDelegate{
 extension AddTodoTableViewController : SelectIconDelegate {
     func userSelectIcon(_ controller: IconPickerTableViewController, _ iconSelected: EnumTodoIcons) {
         todoImageView.image = iconSelected.image
-        if (itemToEdit != nil){
+        /*if (itemToEdit != nil){
             //todo : possible erreur
-            
+            DataManager.shared.addImage(data: iconSelected.image.pngData()!)
             //itemToEdit!.image!.data = iconSelected.image.pngData()
-        }
+        }*/
         controller.dismiss(animated: true)
     }
 }

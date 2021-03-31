@@ -42,6 +42,7 @@
                                         </imageView>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <inset key="separatorInset" minX="2" minY="0.0" maxX="2" maxY="0.0"/>
                                 <connections>
                                     <outlet property="imageView" destination="U6r-IL-i8A" id="ava-bc-NYH"/>
                                     <outlet property="subtitleLabel" destination="JtK-O7-m1P" id="lJc-ph-5CG"/>
