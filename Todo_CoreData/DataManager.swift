@@ -10,14 +10,14 @@ import CoreData
 
 protocol DataManagerProtocol {
     
-    func addTask(titre: String,description: String) -> Tache
+    func addTask(titre: String,description: String, listCategory : [Categorie]) -> Tache
     func addCategory(titre: String) -> Categorie
-    func addTaskUpdated(titre: String, description: String, myCreationDate: Date)
+    func addTaskUpdated(titre: String, description: String, myCreationDate: Date, listCategory : [Categorie])
     
     func deleteTask(objet: Tache)
     func deleteCategory(objet: Categorie)
     
-    func updateTask(objet: Tache, titre: String,description: String)
+    func updateTask(objet: Tache, titre: String,description: String, listCategory : [Categorie])
     
 }
 
@@ -68,46 +68,58 @@ class DataManager{
 }
 
 extension DataManager:DataManagerProtocol{
-    func addTaskUpdated(titre: String, description: String, myCreationDate: Date) {
+    
+    //todo : virer et remplacer addtask par cette fct
+    func addTaskUpdated(titre: String, description: String, myCreationDate: Date = Date(), listCategory : [Categorie]) {
         let managedContext = persistantContainer.viewContext
         let item = Tache(context: managedContext)
         item.titre = titre
         item.desc = description
         item.dateCreation = myCreationDate
+        item.dateMaj = Date()
+        listCategory.forEach { (cat : Categorie) in
+            item.addToCategorie(cat)
+        }
         saveData()
     }
     
     
-    func updateTask(objet: Tache, titre: String, description: String) {
+    func updateTask(objet: Tache, titre: String, description: String, listCategory : [Categorie]) {
         let managedContext = persistantContainer.viewContext
         let fetchRequest: NSFetchRequest<Tache> = Tache.fetchRequest()
         
-        let predicate = NSPredicate(format: "titre : %@",objet.titre as! CVarArg)
+        let predicate = NSPredicate(format: "titre == %@",objet.titre!)
         fetchRequest.predicate = predicate
         
         do{
             
             let result: [Tache] = try managedContext.fetch(fetchRequest)
             
+            
+            addTaskUpdated(titre: titre, description: description, myCreationDate: objet.dateCreation!, listCategory: listCategory)
+            
             for object in result {
                 deleteTask(objet: object)
             }
             
-            addTaskUpdated(titre: titre, description: description, myCreationDate: objet.dateCreation ?? Date())
             
         }catch {
             print(error.localizedDescription)
         }
     }
     
-    func addTask(titre: String , description: String) -> Tache{
+    func addTask(titre: String , description: String, listCategory : [Categorie]) -> Tache{
         let managedContext = persistantContainer.viewContext
         let item = Tache(context: managedContext)
         item.titre = titre
         item.desc = description
+        
         item.dateCreation = Date()
         item.dateMaj = Date()
         
+        listCategory.forEach { (cat : Categorie) in
+            item.addToCategorie(cat)
+        }
         
         saveData()
         return item

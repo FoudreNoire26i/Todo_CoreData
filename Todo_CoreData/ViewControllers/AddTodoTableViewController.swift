@@ -34,7 +34,7 @@ class AddTodoTableViewController: UITableViewController {
         super.viewDidLoad()
         if (itemToEdit != nil){
             titleTextField.text = itemToEdit!.titre
-            descrTextField.text = itemToEdit!.description
+            descrTextField.text = itemToEdit!.desc
             itemToEdit!.categorie?.forEach({ (cat : Any) in
                 listCategory.append((cat as! Categorie))
             })
@@ -78,17 +78,18 @@ class AddTodoTableViewController: UITableViewController {
     
     @IBAction func saveButtonClicked(_ sender: Any) {
         if (itemToEdit != nil){
-            DataManager.shared.updateTask(objet: itemToEdit!, titre: titleTextField.text ?? "default title", description: descrTextField.text ?? "no descr")
-                //update
+            DataManager.shared.updateTask(
+                objet: itemToEdit!,
+                titre: titleTextField.text ?? "No title",
+                description: descrTextField.text ?? "No descr",
+                listCategory: listCategory
+            )
         } else {
-            
             let newTodo = DataManager.shared.addTask(
                 titre: titleTextField.text ?? "No title",
-                description: descrTextField.text ?? "No descr"
+                description: descrTextField.text ?? "No descr",
+                listCategory: listCategory
             )
-            listCategory.forEach { (cat : Categorie) in
-                newTodo.addToCategorie(cat)
-            }
         }
         delegate?.addTodoViewControllerDone(self)
     }
@@ -114,12 +115,14 @@ class AddTodoTableViewController: UITableViewController {
     
     func updateCategoryLabel(){
         if (listCategory.isEmpty){
+            categorieStepper.value = 0
             categorieListLabel.text = "Aucune catégorie"
         } else {
             categorieListLabel.text = ""
             listCategory.forEach { (cat) in
                 categorieListLabel.text! += "\(cat.titre!), "
             }
+            categorieStepper.value = Double(listCategory.count)
         }
     }
 }

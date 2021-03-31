@@ -13,10 +13,6 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        let myManager:DataManagerProtocol = DataManager.shared
-        
-        myManager.addTask(titre: "tache test", description: "description test")
-        myManager.addCategory(titre: "categorie test")
         
     }
 

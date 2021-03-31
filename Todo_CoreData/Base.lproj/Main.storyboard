@@ -254,7 +254,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="Gus-eh-IQC" kind="show" id="vKf-z4-38f"/>
+                                            <segue destination="Gus-eh-IQC" kind="presentation" identifier="selectDefaultImageSegue" id="vKf-z4-38f"/>
                                         </connections>
                                     </tableViewCell>
                                 </cells>

@@ -49,7 +49,7 @@ class IconPickerTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        delegate?.userSelectIcon(self, EnumTodoIcons.allCases[indexPath.row])
+        delegate!.userSelectIcon(self, EnumTodoIcons.allCases[indexPath.row])
     }
 
 }

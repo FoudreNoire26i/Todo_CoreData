@@ -57,7 +57,7 @@ class TodosListTableViewController: UITableViewController {
             tableView.dequeueReusableCell(withIdentifier:"TodoItemCell", for : indexPath) as! TodoTableViewCell
         let item = listTodos[indexPath.row]
         cell.todo = item
-        cell.setUI(title: item.titre!, subtitle: "cat", image: UIImage(named: "Appointments"))
+        cell.setUI(title: item.titre!, subtitle: item.desc!, image: UIImage(named: "Appointments"))
         return cell
     }
     
