@@ -12,14 +12,16 @@ protocol DataManagerProtocol {
     
     func addTask(titre: String,description: String) -> Tache
     func addCategory(titre: String) -> Categorie
+    func addTaskUpdated(titre: String, description: String, myCreationDate: Date)
     
     func deleteTask(objet: Tache)
     func deleteCategory(objet: Categorie)
     
+    func updateTask(objet: Tache, titre: String,description: String)
+    
 }
 
 class DataManager{
-    
     static let shared = DataManager()
     
     var persistantContainer: NSPersistentContainer {
@@ -66,6 +68,37 @@ class DataManager{
 }
 
 extension DataManager:DataManagerProtocol{
+    func addTaskUpdated(titre: String, description: String, myCreationDate: Date) {
+        let managedContext = persistantContainer.viewContext
+        let item = Tache(context: managedContext)
+        item.titre = titre
+        item.desc = description
+        item.dateCreation = myCreationDate
+        saveData()
+    }
+    
+    
+    func updateTask(objet: Tache, titre: String, description: String) {
+        let managedContext = persistantContainer.viewContext
+        let fetchRequest: NSFetchRequest<Tache> = Tache.fetchRequest()
+        
+        let predicate = NSPredicate(format: "titre : %@",objet.titre as! CVarArg)
+        fetchRequest.predicate = predicate
+        
+        do{
+            
+            let result: [Tache] = try managedContext.fetch(fetchRequest)
+            
+            for object in result {
+                deleteTask(objet: object)
+            }
+            
+            addTaskUpdated(titre: titre, description: description, myCreationDate: objet.dateCreation ?? Date())
+            
+        }catch {
+            print(error.localizedDescription)
+        }
+    }
     
     func addTask(titre: String , description: String) -> Tache{
         let managedContext = persistantContainer.viewContext
@@ -74,6 +107,8 @@ extension DataManager:DataManagerProtocol{
         item.desc = description
         item.dateCreation = Date()
         item.dateMaj = Date()
+        
+        
         saveData()
         return item
     }

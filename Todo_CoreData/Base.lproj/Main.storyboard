@@ -47,7 +47,7 @@
                                     <outlet property="imageView" destination="U6r-IL-i8A" id="ava-bc-NYH"/>
                                     <outlet property="subtitleLabel" destination="JtK-O7-m1P" id="lJc-ph-5CG"/>
                                     <outlet property="titleLabel" destination="9To-6m-T8P" id="n7n-to-V65"/>
-                                    <segue destination="60K-qH-JvB" kind="presentation" identifier="editTodoItemSegue" id="bbs-dN-zIp"/>
+                                    <segue destination="60K-qH-JvB" kind="presentation" identifier="editTodoItemSegue" trigger="accessoryAction" id="XDD-4e-8Z0"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -409,7 +409,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="wb7-7X-vyy"/>
+        <segue reference="XDD-4e-8Z0"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Appointments" width="36" height="36"/>

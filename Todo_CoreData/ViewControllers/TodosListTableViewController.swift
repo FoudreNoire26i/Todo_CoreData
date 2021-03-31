@@ -36,7 +36,8 @@ class TodosListTableViewController: UITableViewController {
             let dest = nav.topViewController as! AddTodoTableViewController
             dest.delegate = self
         } else if segue.identifier == "editTodoItemSegue" {
-            let dest = segue.destination as! AddTodoTableViewController
+            let nav = segue.destination as! UINavigationController
+            let dest = nav.topViewController as! AddTodoTableViewController
             dest.itemToEdit = (sender as! TodoTableViewCell).todo
             dest.delegate = self
         }
@@ -58,6 +59,14 @@ class TodosListTableViewController: UITableViewController {
         cell.todo = item
         cell.setUI(title: item.titre!, subtitle: "cat", image: UIImage(named: "Appointments"))
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        //checklist.items.remove(at: indexPath.row)
+        DataManager.shared.deleteTask(objet: listTodos[indexPath.row])
+        listTodos.remove(at: indexPath.row)
+        //saveChecklist()
+        tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
     }
 }
 

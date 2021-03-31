@@ -78,6 +78,7 @@ class AddTodoTableViewController: UITableViewController {
     
     @IBAction func saveButtonClicked(_ sender: Any) {
         if (itemToEdit != nil){
+            DataManager.shared.updateTask(objet: itemToEdit!, titre: titleTextField.text ?? "default title", description: descrTextField.text ?? "no descr")
                 //update
         } else {
             
